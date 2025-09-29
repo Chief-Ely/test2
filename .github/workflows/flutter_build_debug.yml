@@ -1,0 +1,38 @@
+name: Build Flutter Debug APK
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout your code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Setup Flutter using latest stable version
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'   # always pulls latest stable Flutter
+
+      # Step 3: Get dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Step 4: Build Debug APK
+      - name: Build debug APK
+        run: flutter build apk --debug
+
+      # Step 5: Upload generated APK as artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
